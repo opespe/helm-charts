@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "accessnode.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "accessnode.name" . }}
+    helm.sh/chart: {{ include "accessnode.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "accessnode.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "accessnode.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - env:
+          - name: OPES_ACCESSNODE_DEEP_LINK_HOST_URL
+            valueFrom:
+              configMapKeyRef:
+                key: deep-link-host-url
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPES_ACCESSNODE_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: name
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPES_ACCESSNODE_DISPLAY_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: display-name
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPES_ACCESSNODE_URL
+            valueFrom:
+              configMapKeyRef:
+                key: url
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPES_ACCESSNODE_JWK
+            valueFrom:
+              secretKeyRef:
+                key: jwk
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPES_ACCESSNODE_JWS_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                key: jws-algorithm
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPESBATCHSERVICE_CLIENT_URL
+            valueFrom:
+              configMapKeyRef:
+                key: batchservice-url
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPESBATCHSERVICE_CLIENT_RETRY_DELAY
+            valueFrom:
+              configMapKeyRef:
+                key: batchservice-retry-delay
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPESBATCHSERVICE_CLIENT_RETRY_ATTEMPTS
+            valueFrom:
+              configMapKeyRef:
+                key: batchservice-retry-attempts
+                name: {{ include "accessnode.fullname" . }}
+          - name: OPESBATCHSERVICE_CLIENT_API_VERSION
+            valueFrom:
+              configMapKeyRef:
+                key: batchservice-api-version
+                name: {{ include "accessnode.fullname" . }}
+          - name: MICRONAUT_ENVIRONMENTS
+            valueFrom:
+              configMapKeyRef:
+                key: micronaut-environments
+                name: {{ include "accessnode.fullname" . }}
+          name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
