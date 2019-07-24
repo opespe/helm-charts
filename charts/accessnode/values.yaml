@@ -1,0 +1,71 @@
+# Default values for accessnode.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: opespe/accessnode
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts: []
+    # - host: chart-example.local
+    #   paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# OPES Chain Access Node Account Name
+name: myan11111111
+# Access Node Display Name
+displayName: 'My Access Node'
+# Access Node Private Key in JWK Format
+jwk: '{"kty":"EC","crv":"P-256K","kid":"myan11111111","x":"Pdocl4EQap70ZXYpikmbmdiaauoiUkbD492iudSuY/c=","y":"N0Dhf2p720m3KQMlup+5beV116ibJCKwMvS3UOQlI4E=","d":"SnpJcxLdDhUVGr+CRBbcQ1Zn0MqtO3oMPPX+rTrD7lc="}'
+# Micronaunt Environments Setting
+micronautEnvironments: prod
+# URL for OPES deep link site
+deepLinkHostUrl: 'https://mobile.opes.pe'
+
+# OPES Batch Service Settings
+batchService:
+  # URL for OPES Batch Service
+  url: 'https://batch.opesx.io'
+  # Delay between retries for sending a tally
+  retryDelay: '5s'
+  # Number of attempts for sending a tally
+  retryAttempts: '2'
+  # OPES Batch Service API Version
+  apiVersion: '1.0'

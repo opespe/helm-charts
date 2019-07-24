@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "accessnode.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "accessnode.name" . }}
+    helm.sh/chart: {{ include "accessnode.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: curl-jq
+      image: gempesaw/curl-jq
+      command: ['sh']
+      args: 
+        - -c
+        - |
+          [ "{{ .Values.name }}" == $(curl -H 'x-api-version: 1.0' http://{{ include "accessnode.fullname" . }}:{{ .Values.service.port }}/accessnode/tally/params | jq -r '.name') ]
+  restartPolicy: Never
