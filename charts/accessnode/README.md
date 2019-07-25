@@ -18,6 +18,22 @@ To install the chart with the release name `my-an`, an OPES AN account name of `
 $ helm install charts/accessnode --name my-an --set name=antstr111111 --set displayName='AN Tester' --set jwk='{"kty":"EC","crv":"P-256K","kid":"antstr111111","x":"Pdocl4EQap70ZXYpikmbmdiaauoiUkbD492iudSuY/c=","y":"N0Dhf2p720m3KQMlup+5beV116ibJCKwMvS3UOQlI4E=","d":"SnpJcxLdDhUVGr+CRBbcQ1Zn0MqtO3oMPPX+rTrD7lc="}'
 ```
 
+> NOTE: See `examples/ingress-example-values.yaml` for a full example that also exposes the service via a Kubernetes ingress object.
+
+### Verifying Installation
+
+After your access node service is deployed you can run the following `curl` command to verify that it is working and correctly.
+
+```
+curl -H 'x-api-version: 1.0' https://<accessnode hostname>/qr/payload
+```
+
+The above command should return a deep link URL that can be used for creating 'Support Us' links and QR codes. The link returned will be similar to the below example:
+
+```
+https://mobile.opes.pe/opesapp/check-in?ref=qrcode&name=My+AN&url=https%3A%2F%2Fmy-an.example.org
+```
+
 ## Uninstalling the Chart
 
 To uninstall/delete the `my-an` deployment:

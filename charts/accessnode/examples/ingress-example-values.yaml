@@ -1,0 +1,36 @@
+---
+ingress:
+  # Enables the deployment of the ingress object
+  enabled: true
+  annotations:
+    # Specifies that the Nginx ingress controller should manage this ingress
+    # Requires Nginx Ingress Controller (https://kubernetes.github.io/ingress-nginx/)
+    # Nginx Ingress Helm Chart (https://hub.helm.sh/charts/stable/nginx-ingress)
+    # NOTE: This may be different depending on your Kubernetes cluster setup
+    kubernetes.io/ingress.class: nginx
+    # Instructs cert-manager to manage the SSL cert for this ingress
+    # Requries cert-manager (https://github.com/jetstack/cert-manager)
+    # Cert-manager Helm Chart (https://hub.helm.sh/charts/jetstack/cert-manager)
+    kubernetes.io/tls-acme: "true"
+  hosts:
+      # The host name that the service will be exposed at
+    - host: my-an.example.org
+      paths:
+        - /
+  # Enables TLS support for the ingress
+  tls:
+      # The name of the secret that contains the SSL cert for the ingress
+    - secretName: my-an-tls
+      # The host names that should appear on the SSL cert
+      # NOTE: Host names listed in the hosts section should also be listed here
+      hosts:
+        - my-an.example.org
+
+# OPES Access Node account name
+name: antstr111111
+
+# Access Node Display Name (Will appear in mobile app when supporting your AN)
+displayName: 'My AN'
+
+# Access Node Private Key in JWK Format
+jwk: '{"kty":"EC","crv":"P-256K","kid":"antstr111111","x":"Pdocl4EQap70ZXYpikmbmdiaauoiUkbD492iudSuY/c=","y":"N0Dhf2p720m3KQMlup+5beV116ibJCKwMvS3UOQlI4E=","d":"SnpJcxLdDhUVGr+CRBbcQ1Zn0MqtO3oMPPX+rTrD7lc="}'
