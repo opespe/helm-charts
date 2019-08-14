@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: "{{ .Release.Name }}-sync-test"
+  labels:
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  annotations:
+    "helm.sh/hook": test-success
+spec: 
+  containers: 
+  - name: sync-test
+    image: gempesaw/curl-jq:latest
+    command:
+      - sh
+      - -c
+      - |
+        NODEOS_HOST=http://{{ include "infranode.fullname" . }}:8888
+        echo "NODEOS HOST: $NODEOS_HOST"
+        BLOCK_NUM=`curl --connect-timeout 5 --retry 15 --retry-delay 0 $NODEOS_HOST/v1/chain/get_info 2>/dev/null | jq '.head_block_num'`
+        echo "FIRST BLOCK NUMBER: $BLOCK_NUM"
+        echo 
+        sleep 10
+        BLOCK_NUM2=`curl --connect-timeout 5 --retry 15 --retry-delay 0 $NODEOS_HOST/v1/chain/get_info 2>/dev/null | jq '.head_block_num'`
+        echo "SECOND BLOCK NUMBER: $BLOCK_NUM2"
+        [[ "$BLOCK_NUM" -lt "$BLOCK_NUM2" ]] || exit 1
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Never

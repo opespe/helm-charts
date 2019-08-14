@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "infranode.fullname" . }}
+  labels:
+    app: {{ template "infranode.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  logging.json: |-
+    {
+      "includes": [],
+      "appenders": [{
+          "name": "stderr",
+          "type": "console",
+          "args": {
+            "stream": "std_error",
+            "level_colors": [{
+                "level": "debug",
+                "color": "green"
+              },{
+                "level": "warn",
+                "color": "brown"
+              },{
+                "level": "error",
+                "color": "red"
+              }
+            ]
+          },
+          "enabled": true
+        },{
+          "name": "stdout",
+          "type": "console",
+          "args": {
+            "stream": "std_out",
+            "level_colors": [{
+                "level": "debug",
+                "color": "green"
+              },{
+                "level": "warn",
+                "color": "brown"
+              },{
+                "level": "error",
+                "color": "red"
+              }
+            ]
+          },
+          "enabled": true
+        }
+      ],
+      "loggers": [{
+          "name": "default",
+          "level": "debug",
+          "enabled": true,
+          "additivity": false,
+          "appenders": [
+            "stderr"
+          ]
+        }
+      ]
+    }
+
+  genesis.json: |- 
+    {{ .Values.genesisJson | toJson }}
+  boot-producer.sh: |-
+    {{- .Files.Get "scripts/boot-producer.sh" | indent 4 }}

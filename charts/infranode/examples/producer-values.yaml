@@ -1,0 +1,11 @@
+producer:
+  name: cn1111111111
+  privkey: 5KCXicJ8vpagQxNpZzjG2bWsiJHenPfTSq7zzr2GRXjLNDg5swj
+
+auth:
+  enabled: true
+  type: any
+  peerPrivateKey: '["EOS6vBx2yzAx7oAGGefeLxhm8LwDLAnrTAxof3xE16ZueWFEemCBy","5JpPqqvcDb8ea9bwkJLeqJceufXx25DgsL9YKGtjodQpsm1BqkG"]'
+
+persistence:
+  size: 75Gi
