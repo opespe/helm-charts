@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "infranode.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "infranode.name" . }}
+    helm.sh/chart: {{ include "infranode.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "infranode.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "infranode.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+        - name: nodeos
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bash"]
+          args: 
+            - "/usr/local/bin/boot-producer.sh"
+            {{- range .Values.extraconfig }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: PRODUCER_PRIVKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "infranode.fullname" . }}-keys
+                  key: producer.privkey
+          ports:
+            - name: p2p
+              containerPort: 9876
+              protocol: TCP
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/local/bin/boot-producer.sh
+              subPath: boot-producer.sh
+            - name: secret-volume
+              mountPath: /usr/local/etc/eosio/producer.ini
+              subPath: producer.ini
+            - name: config-volume
+              mountPath: /usr/local/etc/eosio/genesis.json
+              subPath: genesis.json
+            - name: config-volume
+              mountPath: /usr/local/etc/eosio/logging.json
+              subPath: logging.json
+            - name: data-volume
+              mountPath: /eosio-data
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ template "infranode.fullname" . }}
+        - name: secret-volume
+          secret:
+            secretName: {{ template "infranode.fullname" . }}
+        - name: data-volume
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "infranode.pvcname-prod" . }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
