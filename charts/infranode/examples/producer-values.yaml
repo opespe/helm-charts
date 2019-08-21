@@ -2,6 +2,9 @@ producer:
   name: cn1111111111
   privkey: 5KCXicJ8vpagQxNpZzjG2bWsiJHenPfTSq7zzr2GRXjLNDg5swj
 
+puzzleService:
+  disableCertValidation: true
+
 auth:
   enabled: true
   type: any
