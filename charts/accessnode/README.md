@@ -51,7 +51,7 @@ The following table lists the configurable parameters of the accessnode chart an
 | Parameter     | Description   | Default
 | ------------- | ------------- | ----------
 | image.repository | The Docker image to deploy | `opespe/accessnode`
-| image.tag | The Docker tag to deploy | `0.1.0`
+| image.tag | The Docker tag to deploy | `0.2.0`
 | image.pullPolicy  | The image pull policy | `IfNotPresent`
 | nameOverride  | Override the resource name prefix | Not Set
 | fullnameOverride  | Override the full resource names  | Not Set
