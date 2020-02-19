@@ -47,10 +47,17 @@ function _term() {
 }
 
 function start_nodeos {
-  nodeos $* --genesis-json $config_dir/genesis.json --config-dir $config_dir
+  nodeos $* --genesis-json $config_dir/genesis.json --config-dir $config_dir --data-dir /eosio-data
 }
 
 init_config
+
+if [[ -r /eosio-data/upgrade.sh ]]; then
+  echo "Found upgrade script. Running upgrade script..."
+  source /eosio-data/upgrade.sh
+  echo "Upgrade script complete. Removing upgrade script."
+  rm -rf /eosio-data/upgrade.sh
+fi
 
 trap _term SIGTERM
 
