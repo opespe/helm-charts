@@ -74,6 +74,7 @@ The following table lists the configurable parameters of the accessnode chart an
 | batchService.retryDelay   | The delay between retries for sending a tally | `5s`
 | batchService.retryAttempts    | The number of attempts for sending a tally    | `2`
 | batchService.apiVersion   | The OPES Batch Service API Version    | `1.0`
+| batchService.opesServiceKeys   | The OPES Service Keys   | `https://opes-opesservice.opesx.io/keys`
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
