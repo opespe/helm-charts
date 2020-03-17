@@ -69,3 +69,5 @@ batchService:
   retryAttempts: '2'
   # OPES Batch Service API Version
   apiVersion: '1.0'
+  #URL for opesservice jwks
+  opesServiceKeys: 'https://opes-opesservice.opesx.io/keys'

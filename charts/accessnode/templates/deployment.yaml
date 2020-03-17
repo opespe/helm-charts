@@ -74,6 +74,11 @@ spec:
               configMapKeyRef:
                 key: batchservice-api-version
                 name: {{ include "accessnode.fullname" . }}
+          - name: OPESSERVICE_JWKS
+            valueFrom:
+              configMapKeyRef:
+                key: batchservice-opesservice-keys
+                name: {{ include "accessnode.fullname" . }}
           - name: MICRONAUT_ENVIRONMENTS
             valueFrom:
               configMapKeyRef:

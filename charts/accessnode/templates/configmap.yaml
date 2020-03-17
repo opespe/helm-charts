@@ -22,3 +22,4 @@ data:
   batchservice-retry-delay: {{ .Values.batchService.retryDelay | quote }}
   batchservice-retry-attempts: {{ .Values.batchService.retryAttempts | quote }}
   batchservice-api-version: {{ .Values.batchService.apiVersion | quote }}
+  batchservice-opesservice-keys: {{ .Values.batchService.opesServiceKeys | quote }}
