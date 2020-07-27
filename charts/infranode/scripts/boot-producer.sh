@@ -18,6 +18,21 @@ function init_config {
   pkill keosd || :
 }
 
+function setup_backup {
+  if [[ -f "/blockBackup.tar"]]; then
+    cd eosio-data
+    mkdir block_backup
+    mv * block_backup
+    mv block_backup/config.ini .
+    mv /blockBackup.tar .
+
+    tar -xf ./blockBackup.tar -C .
+
+    rm blockBackup.tar
+  fi
+
+}
+
 function wait_wallet_ready() {
   for (( i=0 ; i<10; i++ )); do
     ! $wcmd list 2>/tmp/wallet.txt || [ -s /tmp/wallets.txt ] || break
@@ -60,6 +75,13 @@ if [[ -r /eosio-data/upgrade.sh ]]; then
 fi
 
 trap _term SIGTERM
+
+if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
+  setup_backup
+  start_nodeos $* &
+  child=$!
+  ! wait "$child" || exit 0
+fi
 
 start_nodeos $* &
 child=$!
