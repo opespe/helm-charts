@@ -23,7 +23,7 @@ function setup_backup {
     cd eosio-data
     mkdir -p block_backup
     mv * block_backup
-    mv block_backup/config.ini .
+    cp block_backup/config.ini .
     mv /blockBackup.tar .
 
     tar -xf ./blockBackup.tar -C .
