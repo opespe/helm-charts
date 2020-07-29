@@ -19,6 +19,9 @@ producer:
 
 extraconfig: []
 
+backup_recovery:
+  enabled: false
+
 peerDiscovery:
   addresses:
     - "pub-infra-p2p.opesx.io:9876"

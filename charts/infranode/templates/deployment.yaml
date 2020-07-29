@@ -45,6 +45,8 @@ spec:
                 secretKeyRef:
                   name: {{ template "infranode.fullname" . }}-keys
                   key: producer.privkey
+            - name: ENABLE_BACKUP_RECOVERY
+              value: "{{- .Values.backup_recovery.enabled }}"
           ports:
             - name: p2p
               containerPort: 9876
