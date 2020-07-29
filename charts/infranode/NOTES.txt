@@ -1,0 +1,3 @@
+This chart update was created to add the ability add in a block log backup file to the docker image used for startup.
+The flag backup_recovery.enabled was created to know if we want to startup this way and the file will be at the root and
+named "blockBackup.tar".

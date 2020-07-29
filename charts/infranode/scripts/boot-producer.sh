@@ -20,10 +20,21 @@ function init_config {
 
 function setup_backup {
   if [[ -f "/blockBackup.tar" ]]; then
+    mkdir -p backup_block_log
     cd eosio-data
-    mkdir -p block_backup
-    mv * block_backup
-    cp block_backup/config.ini .
+    if ls block* 1> /dev/null 2>&1; then
+      mv block* ../backup_block_log
+    fi
+    if ls lost* 1> /dev/null 2>&1; then
+      mv lost* ../backup_block_log
+    fi
+    if ls snap* 1> /dev/null 2>&1; then
+      mv snap* ../backup_block_log
+    fi
+    if ls state* 1> /dev/null 2>&1; then
+      mv state* ../backup_block_log
+    fi
+    cp config.ini ../backup_block_log
     mv /blockBackup.tar .
 
     tar -xf ./blockBackup.tar -C .
