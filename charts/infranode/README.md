@@ -84,7 +84,7 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 $ helm install charts/infranode --name my-producer -f values.yaml
 ```
 
-##Restart from a backup
+## Restart from a backup
 When it is determined the blockchanin needs to start from a backup a docker container will be created that has the backup 
 log aleady as part of it.  Then the startup for helm will need to include flags to set the `image.tag` and `backup_recovery.enabled`
 values.  First the existing helm chart should be uninstalled (see [link](#Uninstalling-the-Chart)).  Then use the following 
