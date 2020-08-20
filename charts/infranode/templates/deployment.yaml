@@ -45,6 +45,10 @@ spec:
                 secretKeyRef:
                   name: {{ template "infranode.fullname" . }}-keys
                   key: producer.privkey
+            - name: SNAPSHOT_FILE_URI
+              value: "{{- .Values.snapshot_recovery.fileURI }}"
+            - name: ENABLE_SNAPSHOT_RECOVERY
+              value: "{{- .Values.snapshot_recovery.enabled }}"
             - name: ENABLE_BACKUP_RECOVERY
               value: "{{- .Values.backup_recovery.enabled }}"
           ports:
