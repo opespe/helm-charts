@@ -82,7 +82,11 @@ function get_snapshot {
 }
 
 function start_nodeos {
-  nodeos $* --genesis-json $config_dir/genesis.json --config-dir $config_dir --data-dir /eosio-data
+  if [[ "$*" =~ --snapshot ]]; then
+    nodeos $* --config-dir $config_dir --data-dir /eosio-data
+  else
+    nodeos $* --genesis-json $config_dir/genesis.json --config-dir $config_dir --data-dir /eosio-data
+  fi
 }
 
 init_config
@@ -103,16 +107,16 @@ if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
   ! wait "$child" || exit 0
 fi
 
-start_nodeos $* &
-child=$!
-! wait "$child" || exit 0
-
 if [ "$ENABLE_SNAPSHOT_RECOVERY" == "true" ]; then
   get_snapshot
   start_nodeos $* --delete-all-blocks --snapshot "$(ls -t /tmp/*.bin | head -n1)" &
   child=$!
   ! wait "$child" || exit 0
 fi
+
+start_nodeos $* &
+child=$!
+! wait "$child" || exit 0
 
 start_nodeos $* --replay-blockchain &
 child=$!
