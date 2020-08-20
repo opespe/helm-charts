@@ -61,6 +61,8 @@ auth.type                           | Configures --allowed-connection setting   
 auth.peerPrivateKey                 | Configures --peer-private-key setting. Used by node to auth to others     | `Not Set`
 auth.peerKeys                       | Configures --peer-key setting. Used to accept incoming connections        | `[]`
 backup_recovery.enabled             | Whether to enable starting the chain with block logs from a backup file stored in the image. | false
+snapshot_recovery.enabled           | Whether to enable starting the chain with block logs from a snapshot file. | false
+snapshot_recovery.fileURI           | The URI for the snapshot image.                                           | Not Set
 puzzleService.enabled               | Whether to enable puzzle service plugin                                   | `true`
 puzzleService.puzzleServiceUrl      | The web socket URL of the Puzzle service                                  | `wss://puzzler.opesx.io:443`
 puzzleService.disableCertValidation | Disables certificate validation for Puzzle service URL                    | `false`
