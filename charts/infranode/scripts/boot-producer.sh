@@ -73,8 +73,10 @@ function _term() {
 }
 
 function get_snapshot {
+  echo "File URI: $SNAPSHOT_FILE_URI "
   SNAPSHOT_NAME=$(basename $SNAPSHOT_FILE_URI)
-  gsutil cp $SNAPHOT_FILE_URI /tmp/$SNAPSHOT_NAME
+  echo "File Name: $SNAPSHOT_NAME "
+  gsutil cp $SNAPSHOT_FILE_URI /tmp/$SNAPSHOT_NAME
   tar -C /tmp -zxvf /tmp/$SNAPSHOT_NAME
   rm /tmp/$SNAPSHOT_NAME
 }
@@ -101,16 +103,16 @@ if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
   ! wait "$child" || exit 0
 fi
 
-start_nodeos $* &
-child=$!
-! wait "$child" || exit 0
-
 if [ "$ENABLE_SNAPSHOT_RECOVERY" == "true" ]; then
   get_snapshot
   start_nodeos $* --delete-all-blocks --snapshot "$(ls -t /tmp/*.bin | head -n1)" &
   child=$!
   ! wait "$child" || exit 0
 fi
+
+start_nodeos $* &
+child=$!
+! wait "$child" || exit 0
 
 start_nodeos $* --replay-blockchain &
 child=$!
