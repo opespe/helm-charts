@@ -103,16 +103,16 @@ if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
   ! wait "$child" || exit 0
 fi
 
+start_nodeos $* &
+child=$!
+! wait "$child" || exit 0
+
 if [ "$ENABLE_SNAPSHOT_RECOVERY" == "true" ]; then
   get_snapshot
   start_nodeos $* --delete-all-blocks --snapshot "$(ls -t /tmp/*.bin | head -n1)" &
   child=$!
   ! wait "$child" || exit 0
 fi
-
-start_nodeos $* &
-child=$!
-! wait "$child" || exit 0
 
 start_nodeos $* --replay-blockchain &
 child=$!
