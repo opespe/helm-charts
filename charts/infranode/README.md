@@ -94,3 +94,43 @@ command to install the chart with the flags set.
 ```shell script
 helm install charts/infranode --name test-producer --set producer.name='testcn111111' --set producer.privkey=5KCXicJ8vpagQxNpZzjG2bWsiJHenPfTSq7zzr2GRXjLNDg5swj --set auth.enabled='true' --set auth.peerPrivateKey='["EOS6aYUdpz1ytYNYmE5YwwffA1aj6dkgJKjhksKY7F5qy4NarMHQX","5HzSLxhwUBA2DtwtmWPZ9DZhZkgebHK1J6wi724vp2Bu5HD9WAH"]' --set backup_recovery.enabled=true --set image.tag='hotfix-07282020-1'
 ```
+
+# Infranode standalone setup on GCP project 
+Steps:
+* Setup a basic K8 cluster on cloud environment ( for example GCP)
+* Install helm2 server and client based by running the following commands  (https://medium.com/google-cloud/installing-helm-in-google-kubernetes-engine-7f07f43c536e)
+``` #!/usr/bin/env bash
+echo "install helm"
+# installs helm with bash commands for easier command line integration
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+# add a service account within a namespace to segregate tiller
+kubectl --namespace kube-system create sa tiller
+# create a cluster role binding for tiller
+kubectl create clusterrolebinding tiller \
+   --clusterrole cluster-admin \
+   --serviceaccount=kube-system:tiller
+
+echo "initialize helm"
+# initialized helm within the tiller service account
+helm init --service-account tiller
+# updates the repos for Helm repo integration
+helm repo update
+
+echo "verify helm" 
+```
+
+* verify that helm is installed in the cluster
+``` kubectl get deploy,svc tiller-deploy -n kube-system ```
+* Infranode helm installation command ( prod keys will be provided )
+``` helm install charts/infranode --name my-producer --set producer.name='cn1111111111' --set producer.privkey='5JiB3XXXX' --set auth.enabled='true' --set auth.peerPrivateKey='["EOS5jXXXX"\,"5JiB3XXXX"]' ```
+
+Note: producer name can be any name that is not deployed before.
+
+Check infranode pod running at cluster
+``` kubectl get pods ```
+
+Infranode testing
+``` helm test my-producer ```
+
+Checking logs for sync test pod
+``` kubectl get logs my-producer-sync-test ```
