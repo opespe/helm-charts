@@ -121,8 +121,7 @@ echo "verify helm"
 
 * verify that helm is installed in the cluster
 ``` kubectl get deploy,svc tiller-deploy -n kube-system ```
-* Infranode helm installation command ( prod keys required for deployment are at https://github.com/opespe/o1.eos-prod-accounts/blob/master/p2p-access-keys/access-key-58.txt
-
+* Infranode helm installation command ( prod keys will be provided )
 ``` helm install charts/infranode --name my-producer --set producer.name='cn1111111111' --set producer.privkey='5JiB3XXXX' --set auth.enabled='true' --set auth.peerPrivateKey='["EOS5jXXXX"\,"5JiB3XXXX"]' ```
 
 Note: producer name can be any name that is not deployed before.
