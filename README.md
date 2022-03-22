@@ -14,7 +14,7 @@ For more information on using Helm, refer to the [Helm's documentation](https://
 # Infranode standalone setup on GCP project 
 Steps:
 * Setup a basic K8 cluster on cloud environment ( for example GCP)
-* Instance helm2 server and client based by running the following commands  (https://medium.com/google-cloud/installing-helm-in-google-kubernetes-engine-7f07f43c536e)
+* Install helm2 server and client based by running the following commands  (https://medium.com/google-cloud/installing-helm-in-google-kubernetes-engine-7f07f43c536e)
 ``` #!/usr/bin/env bash
 echo "install helm"
 # installs helm with bash commands for easier command line integration
@@ -35,10 +35,9 @@ helm repo update
 echo "verify helm" 
 ```
 
-## verify that helm is installed in the cluster
+* verify that helm is installed in the cluster
 kubectl get deploy,svc tiller-deploy -n kube-system
-Infranode helm installation command ( prod keys required for deployment are at https://github.com/opespe/o1.eos-prod-accounts/blob/master/p2p-access-keys/access-key-58.txt
-
+* Infranode helm installation command ( prod keys required for deployment are at https://github.com/opespe/o1.eos-prod-accounts/blob/master/p2p-access-keys/access-key-58.txt
 
 helm install charts/infranode --name my-producer --set producer.name='cn1111111111' --set producer.privkey='5JiB3XXXX' --set auth.enabled='true' --set auth.peerPrivateKey='["EOS5jXXXX"\,"5JiB3XXXX"]'
 
@@ -52,4 +51,3 @@ Infranode testing
 
 Checking logs for sync test pod
 ``` kubectl get logs my-producer-sync-test ```
-
