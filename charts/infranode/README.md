@@ -95,7 +95,7 @@ command to install the chart with the flags set.
 helm install charts/infranode --name test-producer --set producer.name='testcn111111' --set producer.privkey=5KCXicJ8vpagQxNpZzjG2bWsiJHenPfTSq7zzr2GRXjLNDg5swj --set auth.enabled='true' --set auth.peerPrivateKey='["EOS6aYUdpz1ytYNYmE5YwwffA1aj6dkgJKjhksKY7F5qy4NarMHQX","5HzSLxhwUBA2DtwtmWPZ9DZhZkgebHK1J6wi724vp2Bu5HD9WAH"]' --set backup_recovery.enabled=true --set image.tag='hotfix-07282020-1'
 ```
 
-# Infranode deployment on a stanalone AWS/GCP project 
+# Infranode deployment on a standalone AWS/GCP project 
 Steps:
 * Setup a basic K8 cluster on cloud environment of choice( tested on AWS/GCP)
 * Install helm2 server and client based on running the following commands below: (https://medium.com/google-cloud/installing-helm-in-google-kubernetes-engine-7f07f43c536e)
