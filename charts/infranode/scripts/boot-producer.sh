@@ -113,10 +113,10 @@ if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
   ! wait "$child" || exit 0
 fi
 
-echo "running backup recovery nodes command even outside if loop"
-start_nodeos $* &
-child=$!
-! wait "$child" || exit 0
+# echo "running backup recovery nodes command even outside if loop"
+# start_nodeos $* &
+# child=$!
+# ! wait "$child" || exit 0
 
 echo "2222222222 enablling snapshot recovery - debug 2"
 if [ "$ENABLE_SNAPSHOT_RECOVERY" == "true" ]; then
