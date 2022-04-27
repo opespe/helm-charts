@@ -82,42 +82,59 @@ function get_snapshot {
 }
 
 function start_nodeos {
+  echo "000000000000000  started nodeos function 0"
   nodeos $* --genesis-json $config_dir/genesis.json --config-dir $config_dir --data-dir /eosio-data
 }
 
+echo "init_config start"
 init_config
+echo "init_config end"
 
+echo "start upgrade.sh start"
 if [[ -r /eosio-data/upgrade.sh ]]; then
   echo "Found upgrade script. Running upgrade script..."
   source /eosio-data/upgrade.sh
   echo "Upgrade script complete. Removing upgrade script."
   rm -rf /eosio-data/upgrade.sh
 fi
+echo "end of unpgrade.sh end"
 
+echo "trap _term SIGTERM start"
 trap _term SIGTERM
+echo "trap _term SIGTERM end"
 
+echo "1111111111 enablling backup recovery - debug 1"
 if [ "$ENABLE_BACKUP_RECOVERY" == "true" ]; then
+  echo "setting up backup recovery - debug 1a"
   setup_backup
+  echo "nodes command executed - debug 1b"
   start_nodeos $* &
   child=$!
   ! wait "$child" || exit 0
 fi
 
+echo "running backup recovery nodes command even outside if loop"
 start_nodeos $* &
 child=$!
 ! wait "$child" || exit 0
 
+echo "2222222222 enablling snapshot recovery - debug 2"
 if [ "$ENABLE_SNAPSHOT_RECOVERY" == "true" ]; then
+  echo "getting snapshot - debug 2a"
   get_snapshot
+  echo "start_nodeos  --delete-all-blocks --snapshot command - debug 2b"
   start_nodeos $* --delete-all-blocks --snapshot "$(ls -t /tmp/*.bin | head -n1)" &
   child=$!
   ! wait "$child" || exit 0
 fi
 
+echo "3333333333 replay-blockchain - debug 3"
 start_nodeos $* --replay-blockchain &
 child=$!
 ! wait "$child" || exit 0
 
+echo "4444444444 hard-replay-blockchain  - debug 4"
 start_nodeos $* --hard-replay-blockchain &
 child=$!
 wait "$child"
+echo "******************* end of all commands"
