@@ -4,7 +4,7 @@
 
 image:
   repository: opespe/infranode
-  tag: 1.1.0
+  tag: retagd9bde5c
   pullPolicy: IfNotPresent
 
 # Node labels for pod assignment
@@ -24,7 +24,7 @@ backup_recovery:
 
 snapshot_recovery:
   enabled: true
-  fileURI: gs://opes-one-prod-eos-data/prod/snapshots/snap_2022-04-21-04-30.tar.gz
+  fileURI: gs://public-snapshot-access/prod_snapshots_snap_latest.tar
 
 peerDiscovery:
   addresses:
